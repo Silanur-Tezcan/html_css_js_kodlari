@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Swiper.js CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <style>
+        body {
+            display: flex;
+            height: 100vh;
+        }
+        .sidebar {
+            min-width: 250px;
+            max-width: 250px;
+            background-color: #3e5874;
+            padding: 15px;
+            position: fixed;
+            height: 100%;
+            transition: all 0.3s;
+        }
+        .sidebar a{
+            position: relative;
+            top: 45px;
+            color: white;
+            font-size: 1.25rem;
+        }
+        .content {
+            flex: 1;
+            padding: 20px;
+            margin-left: 250px;
+            transition: all 0.3s;
+        }
+        .content-section {
+            display: none;
+        }
+        .sidebar.collapsed {
+            margin-left: -250px;
+        }
+        .content.collapsed {
+            margin-left: 0;
+        }
+        .menu-toggle {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+            cursor: pointer;
+        }
+        .menu-toggle span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background-color:black;
+            margin: 5px 0;
+            position: relative;
+            right: -190px;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-toggle" id="toggleButton">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+    <div class="sidebar" id="menu">
+         <img src="imgs/SNT.png" style="border-radius: 60%; width: 150px; height: 150px; position: relative; top: 25px; right: -10%;" alt="">
+        <h3 style="position: relative; top: 25px; right: -25%; font-size: 2rem; color: white;">SNT</h3>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="showContent('section1')">Projelerim</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="showContent('section2')">Sertifikalarım</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="showContent('section3')">Hakkımda</a>
+            </li>
+        </ul>
+    </div>
+  
+    <div class="content">
+        <div id="section1" class="content-section">
+            <h2>Bölüm 1</h2>
+            <p>Bölüm 1 içeriği buraya gelecek...</p>
+        </div>
+        <div id="section2" class="content-section">
+            <h2>Bölüm 2</h2>
+            <p>Bölüm 2 içeriği buraya gelecek...</p>
+        </div>
+        <div id="section3" class="content-section">
+            <h2>Bölüm 3</h2>
+            <p>Bölüm 3 içeriği buraya gelecek...</p>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Swiper.js -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+    <script>
+     
+        // Menü açılır kapanır buton fonksiyonu
+        function showContent(sectionId) {
+            $('.content-section').hide();
+            $('#' + sectionId).show();
+        }
+        // Menü açılır kapanır buton fonksiyonu
+        document.getElementById("toggleButton").addEventListener("click", function() {
+            var menu = document.getElementById("menu");
+            var toggleButton = document.getElementById("toggleButton");
+            if (menu.style.display === "block") {
+                menu.style.display = "none";
+                toggleButton.style.left = "-180px"; // Butonu sola kaydır
+            } else {
+                menu.style.display = "block";
+                toggleButton.style.left = "10px"; // Butonu menüye göre ayarla
+            }
+        });
+    </script>
+</body>
+</html>
