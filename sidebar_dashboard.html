@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kişisel Panel | SNT</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: #f8f9fa;
+    }
+
+    .menu-toggle {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      cursor: pointer;
+      z-index: 2000;
+    }
+
+    .menu-toggle div {
+      width: 30px;
+      height: 3px;
+      background: #333;
+      margin: 6px 0;
+      transition: 0.4s;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 250px;
+      height: 100%;
+      background: #3e5874;
+      color: white;
+      padding: 30px 15px;
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+
+    .sidebar.hide {
+      transform: translateX(-100%);
+    }
+
+    .sidebar img {
+      width: 120px;
+      border-radius: 50%;
+      display: block;
+      margin: 0 auto 10px;
+    }
+
+    .sidebar h3 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .sidebar .nav-link {
+      color: #fff;
+      font-size: 1.1rem;
+      padding: 10px 15px;
+      border-radius: 4px;
+      transition: background 0.3s;
+    }
+
+    .sidebar .nav-link:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .content {
+      margin-left: 250px;
+      padding: 30px;
+      transition: margin-left 0.3s ease;
+    }
+
+    .content.full {
+      margin-left: 0;
+    }
+
+    .content-section {
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .content-section.active {
+      display: block;
+    }
+
+    h2 {
+      color: #3e5874;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 1.1rem;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+      .content {
+        margin-left: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="menu-toggle" id="toggleBtn">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+
+  <div class="sidebar" id="sidebar">
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/512px-React-icon.svg.png" alt="SNT Logo" width="150" style="border-radius: 50%;">    <nav class="nav flex-column">
+      <a class="nav-link" href="#" onclick="showSection('section1')"><i class="fas fa-project-diagram"></i> Projelerim</a>
+      <a class="nav-link" href="#" onclick="showSection('section2')"><i class="fas fa-certificate"></i> Sertifikalarım</a>
+      <a class="nav-link" href="#" onclick="showSection('section3')"><i class="fas fa-user"></i> Hakkımda</a>
+    </nav>
+  </div>
+
+  <div class="content" id="mainContent">
+    <div id="section1" class="content-section active">
+        <br><br>
+      <h2>Projelerim</h2>
+      <p>Geliştirdiğim projeler arasında dinamik eğitim platformları, QR menü sistemleri ve blog sayfaları yer alıyor. Tüm projelerimde kullanıcı deneyimini ve görselliği ön planda tutuyorum.</p>
+    </div>
+
+    <div id="section2" class="content-section">
+      <h2>Sertifikalarım</h2>
+      <p>Yazılım geliştirme, web tasarımı ve veritabanı yönetimi konularında aldığım sertifikalar, sürekli öğrenme ve kendimi geliştirme tutkumun bir yansımasıdır.</p>
+    </div>
+
+    <div id="section3" class="content-section">
+      <h2>Hakkımda</h2>
+      <p>Ben Sıla Nur Tezcan. Yönetim Bilişim Sistemleri öğrencisiyim. Estetik ve işlevselliği bir araya getiren web projeleri üretmekten büyük keyif alıyorum. Hedefim, kullanıcı dostu arayüzlerle dolu özgün projeler geliştirmek.</p>
+    </div>
+  </div>
+
+  <script>
+    const toggleBtn = document.getElementById("toggleBtn");
+    const sidebar = document.getElementById("sidebar");
+    const content = document.getElementById("mainContent");
+
+    toggleBtn.addEventListener("click", () => {
+      sidebar.classList.toggle("hide");
+      content.classList.toggle("full");
+    });
+
+    function showSection(sectionId) {
+      const sections = document.querySelectorAll(".content-section");
+      sections.forEach(sec => {
+        sec.classList.remove("active");
+      });
+      document.getElementById(sectionId).classList.add("active");
+    }
+  </script>
+
+</body>
+</html>
