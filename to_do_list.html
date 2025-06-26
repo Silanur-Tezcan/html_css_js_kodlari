@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>to do list deneme</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(136deg,rgb(213, 87, 87),rgb(220, 117, 13));
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(34, 33, 33, 0.929);
+            text-align: center;
+            border: 1px solid gray;
+        }
+
+        input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px;
+            background: green;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: burlywood;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>TO-DO List</h1>
+        <input type="text" id="taskInput" placeholder="Yeni görev ekle...">
+        <button id="addTask">Ekle</button>
+        <ul id="taskList"></ul>
+    </div>
+
+    <script>
+
+document.addEventListener("DOMContentLoaded", function () {
+    const taskInput = document.getElementById("taskInput");
+    const addTaskButton = document.getElementById("addTask");
+    const taskList = document.getElementById("taskList");
+
+    // Sayfa yüklendiğinde görevleri getir
+    loadTasks();
+
+    // Görev ekleme
+    addTaskButton.addEventListener("click", function () {
+        const taskText = taskInput.value.trim();
+        if (taskText !== "") {
+            const li = createTaskElement(taskText);
+            taskList.appendChild(li);
+            taskInput.value = "";
+            saveTasks();
+        }
+    });
+
+    // Görev elemanı oluşturma fonksiyonu
+    function createTaskElement(taskText) {
+        const li = document.createElement("li");
+        li.innerHTML = `
+            <span>${taskText}</span>
+            <button class="complete-btn">✔</button>
+            <button class="delete-btn">❌</button>
+        `;
+
+        li.querySelector(".complete-btn").addEventListener("click", function () {
+            li.classList.toggle("completed");
+        });
+
+        li.querySelector(".delete-btn").addEventListener("click", function () {
+            taskList.removeChild(li);
+            saveTasks();
+        });
+
+        return li;
+    }
+
+    // Görevleri kaydet
+    function saveTasks() {
+        const tasks = [];
+        document.querySelectorAll("#taskList li").forEach(li => {
+            const text = li.querySelector("span").textContent;
+            const completed = li.classList.contains("completed");
+            tasks.push({ text, completed });
+        });
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+    }
+
+    // Kaydedilmiş görevleri yükle
+    function loadTasks() {
+        const saved = JSON.parse(localStorage.getItem("tasks") || "[]");
+        saved.forEach(task => {
+            const li = createTaskElement(task.text);
+            if (task.completed) {
+                li.classList.add("completed");
+            }
+            taskList.appendChild(li);
+        });
+    }
+    // Enter tuşuyla ekleme
+taskInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+        addTaskButton.click();
+    }
+});
+});
+
+    </script>
+</body>
+
+</html>
