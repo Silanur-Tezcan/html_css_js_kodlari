@@ -1,145 +1,292 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>to do list deneme</title>
-    <style>
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: linear-gradient(136deg,rgb(213, 87, 87),rgb(220, 117, 13));
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>To-Do List</title>
 
-        .container {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(34, 33, 33, 0.929);
-            text-align: center;
-            border: 1px solid gray;
-        }
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(136deg, rgb(213, 87, 87), rgb(220, 117, 13));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px;
+    }
 
-        input {
-            width: 80%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
+    .container {
+      background: white;
+      padding: 20px;
+      margin: 10px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(34, 33, 33, 0.929);
+      width: 100%;
+      max-width: 500px;
+    }
 
-        button {
-            padding: 10px;
-            background: green;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-        }
+    h1,
+    h2 {
+      margin-bottom: 10px;
+    }
 
-        ul {
-            list-style: none;
-            padding: 0;
-        }
+    input {
+      width: 70%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
 
-        li {
-            background-color: burlywood;
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 5px;
-            
-            justify-content: space-between;
-            align-items: center;
-        }
-    </style>
+    button {
+      padding: 10px;
+      background: green;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      background-color: burlywood;
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+
+    .completed {
+      background-color: lightgreen;
+      text-decoration: line-through;
+    }
+
+    #completedList li {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    #successMessage {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #4caf50;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      display: none;
+      animation: fadeOut 2s ease-in-out forwards;
+    }
+
+    @keyframes fadeOut {
+      0% {
+        opacity: 1;
+      }
+
+      80% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+        display: none;
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <canvas id="confettiCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;"></canvas>
 
-    <div class="container">
-        <h1>TO-DO List</h1>
-        <input type="text" id="taskInput" placeholder="Yeni görev ekle...">
-        <button id="addTask">Ekle</button>
-        <ul id="taskList"></ul>
-    </div>
+  <div id="successMessage">✔ Görev tamamlandı!</div>
 
-    <script>
+  <div class="container">
+    <h1>📝 To-Do List</h1>
+    <input type="text" id="taskInput" placeholder="Yeni görev ekle..." />
+    <button id="addTask">Ekle</button>
+    <ul id="taskList"></ul>
+  </div>
 
-document.addEventListener("DOMContentLoaded", function () {
-    const taskInput = document.getElementById("taskInput");
-    const addTaskButton = document.getElementById("addTask");
-    const taskList = document.getElementById("taskList");
+  <div class="container">
+    <h2>✅ Yapılanlar</h2>
+    <ul id="completedList"></ul>
+  </div>
 
-    // Sayfa yüklendiğinde görevleri getir
-    loadTasks();
+  <script>
+    // Canvas-confetti yerel versiyon (CDN olmadan çalışır)
+    const confetti = (function () {
+      const canvas = document.getElementById("confettiCanvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
 
-    // Görev ekleme
-    addTaskButton.addEventListener("click", function () {
+      function random(min, max) {
+        return Math.random() * (max - min) + min;
+      }
+
+      function ConfettiParticle() {
+        this.x = random(0, canvas.width);
+        this.y = random(-canvas.height, 0);
+        this.r = random(2, 6);
+        this.d = random(10, 30);
+        this.color = `hsl(${random(0, 360)}, 100%, 50%)`;
+        this.tilt = random(-10, 10);
+        this.tiltAngle = 0;
+        this.tiltAngleIncrement = random(0.05, 0.12);
+
+        this.draw = function () {
+          ctx.beginPath();
+          ctx.lineWidth = this.r;
+          ctx.strokeStyle = this.color;
+          ctx.moveTo(this.x + this.tilt, this.y);
+          ctx.lineTo(this.x, this.y + this.tilt + this.r);
+          ctx.stroke();
+        };
+      }
+
+      let particles = [];
+      for (let i = 0; i < 150; i++) {
+        particles.push(new ConfettiParticle());
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let p of particles) {
+          p.tiltAngle += p.tiltAngleIncrement;
+          p.y += (Math.cos(p.d) + 3 + p.r / 2) / 2;
+          p.x += Math.sin(p.tiltAngle) * 2;
+          p.draw();
+        }
+      }
+
+      function animate() {
+        draw();
+        requestAnimationFrame(animate);
+      }
+
+      return function launchConfetti() {
+        particles = [];
+        for (let i = 0; i < 150; i++) {
+          particles.push(new ConfettiParticle());
+        }
+        animate();
+        setTimeout(() => {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }, 2000);
+      };
+    })();
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const taskInput = document.getElementById("taskInput");
+      const addTaskButton = document.getElementById("addTask");
+      const taskList = document.getElementById("taskList");
+      const completedList = document.getElementById("completedList");
+
+      loadTasks();
+
+      addTaskButton.addEventListener("click", function () {
         const taskText = taskInput.value.trim();
         if (taskText !== "") {
-            const li = createTaskElement(taskText);
-            taskList.appendChild(li);
-            taskInput.value = "";
-            saveTasks();
+          const li = createTaskElement(taskText);
+          taskList.appendChild(li);
+          taskInput.value = "";
+          saveTasks();
         }
-    });
+      });
 
-    // Görev elemanı oluşturma fonksiyonu
-    function createTaskElement(taskText) {
+      taskInput.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+          addTaskButton.click();
+        }
+      });
+
+      function createTaskElement(taskText, isCompleted = false) {
         const li = document.createElement("li");
         li.innerHTML = `
-            <span>${taskText}</span>
-            <button class="complete-btn">✔</button>
-            <button class="delete-btn">❌</button>
+          <span>${taskText}</span>
+          <button class="complete-btn">✔</button>
+          <button class="delete-btn">❌</button>
         `;
 
+        if (isCompleted) {
+          li.classList.add("completed");
+          addToCompletedList(taskText);
+        }
+
         li.querySelector(".complete-btn").addEventListener("click", function () {
-            li.classList.toggle("completed");
+          li.classList.add("completed");
+          addToCompletedList(taskText);
+          showSuccessMessage();
+          confetti(); // 🎊 Konfeti efekti
+          saveTasks();
         });
 
         li.querySelector(".delete-btn").addEventListener("click", function () {
-            taskList.removeChild(li);
-            saveTasks();
+          li.remove();
+          removeFromCompletedList(taskText);
+          saveTasks();
         });
 
         return li;
-    }
+      }
 
-    // Görevleri kaydet
-    function saveTasks() {
+      function addToCompletedList(taskText) {
+        const exists = Array.from(completedList.children).some(li =>
+          li.textContent === taskText
+        );
+        if (!exists) {
+          const li = document.createElement("li");
+          li.textContent = taskText;
+          completedList.appendChild(li);
+        }
+      }
+
+      function removeFromCompletedList(taskText) {
+        Array.from(completedList.children).forEach(li => {
+          if (li.textContent === taskText) {
+            completedList.removeChild(li);
+          }
+        });
+      }
+
+      function showSuccessMessage() {
+        const msg = document.getElementById("successMessage");
+        msg.style.display = "block";
+        msg.style.animation = "fadeOut 2s ease-in-out forwards";
+        setTimeout(() => {
+          msg.style.display = "none";
+        }, 2000);
+      }
+
+      function saveTasks() {
         const tasks = [];
         document.querySelectorAll("#taskList li").forEach(li => {
-            const text = li.querySelector("span").textContent;
-            const completed = li.classList.contains("completed");
-            tasks.push({ text, completed });
+          const text = li.querySelector("span").textContent;
+          const completed = li.classList.contains("completed");
+          tasks.push({ text, completed });
         });
         localStorage.setItem("tasks", JSON.stringify(tasks));
-    }
+      }
 
-    // Kaydedilmiş görevleri yükle
-    function loadTasks() {
+      function loadTasks() {
         const saved = JSON.parse(localStorage.getItem("tasks") || "[]");
         saved.forEach(task => {
-            const li = createTaskElement(task.text);
-            if (task.completed) {
-                li.classList.add("completed");
-            }
-            taskList.appendChild(li);
+          const li = createTaskElement(task.text, task.completed);
+          taskList.appendChild(li);
         });
-    }
-    // Enter tuşuyla ekleme
-taskInput.addEventListener("keydown", function (e) {
-    if (e.key === "Enter") {
-        addTaskButton.click();
-    }
-});
-});
-
-    </script>
+      }
+    });
+  </script>
 </body>
 
 </html>
