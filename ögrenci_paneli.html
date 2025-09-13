@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Öğrenci Paneli</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f5f7fa;
+    }
+
+    .navbar {
+      background-color: #2c3e50;
+      padding: 4px 20px;
+      min-height: 48px;
+      font-size: 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .navbar-brand {
+      font-weight: 600;
+      font-size: 16px;
+      color: #ffffff !important;
+    }
+
+    .navbar-nav .nav-link {
+      color: #ffffff !important;
+      font-size: 14px;
+      padding: 4px 12px;
+      background-color: transparent;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+
+    .navbar-nav .nav-link:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .main {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      padding: 30px;
+    }
+
+    .todo-section, .profile-section {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ccc;
+      padding: 20px;
+      margin: 20px;
+      flex: 1 1 400px;
+      max-width: 500px;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      width: 70%;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      padding: 10px 15px;
+      margin-left: 10px;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 15px;
+    }
+
+    li {
+   
+      padding: 10px;
+      margin-bottom: 8px;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    li.completed {
+      background: #d4edda;
+      text-decoration: line-through;
+    }
+
+    .profile-section img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 10px;
+    }
+
+    .stats {
+      margin-top: 15px;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+
+    .kamp-dersleri {
+      padding: 30px;
+    }
+
+    .kamp-dersleri h2 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+
+    .kamp-dersleri h3 {
+      color: #34495e;
+    }
+
+    .kamp-dersleri ul {
+      padding-left: 20px;
+    }
+
+    .kamp-dersleri li {
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">B12 AKADEMİ</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link" href="#">📚 Derslerim</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">👤 Profilim</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">📺 Canlı Ders</a></li>
+        </ul>
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="#">Hoş geldin, Sıla</a></li>
+          <li class="nav-item"><a class="nav-link text-danger" href="#">🚪 Çıkış Yap</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main">
+    <!-- Görev Listesi -->
+    <div class="todo-section">
+      <h2>📋 Görevlerim</h2>
+      <input type="text" id="taskInput" placeholder="Yeni görev ekle...">
+      <button onclick="addTask()">Ekle</button>
+      <ul id="taskList"></ul>
+      <ul id="completedList"></ul>
+    </div>
+
+    <!-- Profil -->
+    <div class="profile-section">
+      <h2>Profil</h2>
+      <img id="profilePic" src="https://via.placeholder.com/100" alt="Profil Fotoğrafı">
+      <input type="file" accept="image/*" onchange="uploadPhoto(event)">
+      <div>Ad: <strong>Sıla Nur Tezcan</strong></div>
+      <div>Kamp: <strong>ÖABT Kampı</strong></div>
+      <div class="stats" id="statsBox">Başarı Oranı: 0%</div>
+    </div>
+  </div>
+
+  <!-- Kamp Dersleri -->
+  <div class="kamp-dersleri">
+    <h2>📚 ÖABT Kampındaki Dersler</h2>
+    <div style="margin-bottom: 20px;">
+      <h3>Türkçe Eğitim</h3>
+      <ul>
+        <li>Ses Bilgisi</li>
+        <li>Yazım Kuralları</li>
+        <li>Paragraf Analizi</li>
+      </ul>
+    </div>
+    <div style="margin-bottom: 20px;">
+      <h3>Eğitim Bilimleri</h3>
+      <ul>
+        <li>Öğrenme Psikolojisi</li>
+        <li>Program Geliştirme</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    const taskList = document.getElementById("taskList");
+    const completedList = document.getElementById("completedList");
+    const statsBox = document.getElementById("statsBox");
+
+    function addTask() {
+      const input = document.getElementById("taskInput");
+      const text = input.value.trim();
+      if (text === "") return;
+
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <span>${text}</span>
+        <button onclick="completeTask(this)">✔</button>
+        <button onclick="deleteTask(this)">❌</button>
+      `;
+      taskList.appendChild(li);
+      input.value = "";
+      updateStats();
+    }
+
+    function completeTask(btn) {
+      const li = btn.parentElement;
+      li.classList.add("completed");
+      btn.remove();
+      completedList.appendChild(li.cloneNode(true));
+      updateStats();
+    }
+
+    function deleteTask(btn) {
+      const li = btn.parentElement;
+      li.remove();
+      updateStats();
+    }
+
+    function updateStats() {
+      const total = taskList.children.length + completedList.children.length;
+      const completed = completedList.children.length;
+      const rate = total > 0 ? Math.round((completed / total) * 100) : 0;
+      statsBox.textContent = `Başarı Oranı: ${rate}% (${completed}/${total})`;
+    }
+
+    function uploadPhoto(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          document.getElementById("profilePic").src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+  </script>
+</body>
+</html>
